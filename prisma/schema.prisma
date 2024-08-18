@@ -17,6 +17,7 @@ model User {
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
+  stripeCustomerId  String?
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
