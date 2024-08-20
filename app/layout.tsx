@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto, Lobster_Two } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/NavBar";
 import { getServerSession } from "next-auth";
@@ -7,6 +7,7 @@ import { authOptions } from "./api/auth/[...nextauth]/route";
 import Hydrate from "./components/Hydrate";
 
 const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({weight: ["400", "500", "700"], subsets: ["latin"]})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +23,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en">
-      <body className="mx-60">
+      <body className={`mx-64 ${roboto.className}`}>
         <Hydrate>
           <NavBar user={session?.user} expires={session?.expires || ""} />
           {children}
