@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Cart from "./Cart";
 import { AiFillShopping } from "react-icons/ai";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function NavBar({ user }: Session) {
   const cartStore = useCartStore();
@@ -16,11 +17,23 @@ export default function NavBar({ user }: Session) {
         <h1>Styled</h1>
       </Link>
       <ul className="flex items-center gap-7">
-        <li onClick={()=> cartStore.toggleCart()}  className="flex items-center text-3xl relative cursor-pointer">
+        <li
+          onClick={() => cartStore.toggleCart()}
+          className="flex items-center text-3xl relative cursor-pointer"
+        >
           <AiFillShopping />
-          <span className="bg-red-600 text-white text-sm font-bold w-5 h-5 rounded-full absolute left-4 bottom-4 flex items-center justify-center">
-            {cartStore.cart.length}
-          </span>
+          <AnimatePresence>
+            {cartStore.cart.length > 0 && (
+              <motion.span
+                animate={{ scale: 1 }}
+                initial={{ scale: 0 }}
+                exit={{ scale: 0 }}
+                className="bg-red-600 text-white text-sm font-bold w-5 h-5 rounded-full absolute left-4 bottom-4 flex items-center justify-center"
+              >
+                {cartStore.cart.length}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </li>
         {!user && (
           <li className="bg-blue-600 text-white py-2 px-4 rounded-md">
@@ -39,7 +52,7 @@ export default function NavBar({ user }: Session) {
           </li>
         )}
       </ul>
-      {cartStore.isOpen && <Cart />}
+      <AnimatePresence>{cartStore.isOpen && <Cart />}</AnimatePresence>
     </nav>
   );
 }
