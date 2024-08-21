@@ -61,7 +61,7 @@ export default async function handler(
       });
       //fetch order with product id's
       const existing_order = await prisma.order.findFirst({
-        where: { paymentIntentId: updated_intent?.id },
+        where: { paymentIntentId: (await updated_intent).id},
         include: { products: true },
       });
       if (!existing_order) {

@@ -47,7 +47,7 @@ export default function CheckOut() {
 
   return (
     <div>
-      {!clientSecret && (
+      {clientSecret && (
         <div>
           <Elements options={options} stripe={stripePromise}>
             <CheckOutForm clientSecret={clientSecret}/>
