@@ -30,7 +30,7 @@ export default async function handler(
   }
   //extract the data from the user
   const { items, payment_intent_id } = req.body;
-  console.log(items, payment_intent_id)
+
 
   //create order data
   const orderData = {
@@ -57,12 +57,13 @@ export default async function handler(
       payment_intent_id
     );
     if (current_intent) {
-      const updated_intent = await stripe.paymentIntents.update(payment_intent_id,
-        { amount: calculateOrderAmount(items)}
-    );
+      const updated_intent = await stripe.paymentIntents.update(
+        payment_intent_id,
+        { amount: calculateOrderAmount(items) }
+      );
       //fetch order with product id's
       const existing_order = await prisma.order.findFirst({
-        where: { paymentIntentId: updated_intent.id},
+        where: { paymentIntentId: updated_intent.id },
         include: { products: true },
       });
       if (!existing_order) {
@@ -103,3 +104,5 @@ export default async function handler(
     res.status(200).json({ paymentIntent });
   }
 }
+
+export { handler as POST };

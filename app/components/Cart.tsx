@@ -97,6 +97,8 @@ export default function Cart() {
             ))}
           </>
         )}
+
+        {/* checkout and total price */}
         {cartStore.cart.length > 0 && cartStore.onCheckout === "cart" ?(
           <motion.div layout>
             <p>Total: {formatPrice(totalPrice)}</p>
