@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 
 const calculateOrderAmount = (items: AddCartType[]) => {
   const totalPrice = items.reduce((acc, item) => {
-    return acc + item.unit_amount * item.quantity!;
+    return acc + item.unit_amount! * item.quantity!;
   }, 0);
   return totalPrice;
 };
@@ -30,6 +30,7 @@ export default async function handler(
   }
   //extract the data from the user
   const { items, payment_intent_id } = req.body;
+  console.log(items, payment_intent_id)
 
   //create order data
   const orderData = {
@@ -37,7 +38,7 @@ export default async function handler(
     amount: calculateOrderAmount(items),
     currency: "usd",
     status: "pending",
-    paymentIntentId: payment_intent_id,
+    paymentIntentID: payment_intent_id,
     products: {
       create: items.map((item) => ({
         name: item.name,
@@ -56,12 +57,12 @@ export default async function handler(
       payment_intent_id
     );
     if (current_intent) {
-      const updated_intent = stripe.paymentIntents.update(payment_intent_id, {
-        amount: calculateOrderAmount(items),
-      });
+      const updated_intent = await stripe.paymentIntents.update(payment_intent_id,
+        { amount: calculateOrderAmount(items)}
+    );
       //fetch order with product id's
       const existing_order = await prisma.order.findFirst({
-        where: { paymentIntentId: (await updated_intent).id},
+        where: { paymentIntentId: updated_intent.id},
         include: { products: true },
       });
       if (!existing_order) {
@@ -95,7 +96,7 @@ export default async function handler(
       automatic_payment_methods: { enabled: true },
     });
 
-    orderData.paymentIntentId = paymentIntent.id;
+    orderData.paymentIntentID = paymentIntent.id;
     const newOrder = await prisma.order.create({
       data: orderData,
     });

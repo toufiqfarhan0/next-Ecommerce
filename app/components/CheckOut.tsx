@@ -32,25 +32,24 @@ export default function CheckOut() {
         return res.json();
       })
       .then((data) => {
-        setClientSecret(data.paymentIntent.client_secret);
-        cartStore.setPaymentIntent(data.paymentIntent.id);
+        console.log(data);
       });
   }, []);
 
-  const options:StripeElementsOptions = {
+  const options: StripeElementsOptions = {
     clientSecret,
-    appearance:{
+    appearance: {
       theme: "stripe",
-      labels: "floating"
-    }
-  }
+      labels: "floating",
+    },
+  };
 
   return (
     <div>
       {clientSecret && (
         <div>
           <Elements options={options} stripe={stripePromise}>
-            <CheckOutForm clientSecret={clientSecret}/>
+            <CheckOutForm clientSecret={clientSecret} />
           </Elements>
         </div>
       )}

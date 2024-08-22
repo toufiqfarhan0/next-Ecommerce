@@ -23,8 +23,8 @@ export const authOptions:NextAuthOptions = {
       //lets create a stripe customer
       if (user.name && user.email) {
         const customer = await stripe.customers.create({
-          email: user.email,
-          name: user.name,
+          email: user.email || undefined,
+          name: user.name || undefined,
         });
         //Also update our prisma user with the customerId
         await prisma.user.update({
@@ -39,7 +39,7 @@ export const authOptions:NextAuthOptions = {
     },
   },
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       session.user = user;
       return session;
     },
